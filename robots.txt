@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://translation.nice.okinawa/sitemap.xml

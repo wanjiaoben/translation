@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://translation.nice.okinawa/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://translation.nice.okinawa/"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://translation.nice.okinawa/?lang=tw"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://translation.nice.okinawa/?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://translation.nice.okinawa/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://translation.nice.okinawa/?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://translation.nice.okinawa/?lang=ko"/>
+    <xhtml:link rel="alternate" hreflang="th" href="https://translation.nice.okinawa/?lang=th"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://translation.nice.okinawa/"/>
+  </url>
+  <url><loc>https://translation.nice.okinawa/?lang=tw</loc></url>
+  <url><loc>https://translation.nice.okinawa/?lang=ja</loc></url>
+  <url><loc>https://translation.nice.okinawa/?lang=en</loc></url>
+  <url><loc>https://translation.nice.okinawa/?lang=de</loc></url>
+  <url><loc>https://translation.nice.okinawa/?lang=ko</loc></url>
+  <url><loc>https://translation.nice.okinawa/?lang=th</loc></url>
+</urlset>
