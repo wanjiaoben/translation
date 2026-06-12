@@ -1,5 +1,5 @@
 # translation.nice.okinawa
-冲绳法务翻译·士业预约协调站（深耕ラボ / SINKOLABO）
+冲绳商务翻译·法律事务所预约协调同行翻译站（深耕ラボ / SINKOLABO）
 
 - 单文件七语站点（简/繁/日/EN/DE/KO/TH），JS i18n + 浏览器语言自动检测
 - 联系渠道按语言路由（CLAUDE.md 规则）：中文→微信、日→LINE、英/德→WhatsApp
