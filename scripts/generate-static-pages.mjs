@@ -129,14 +129,13 @@ function renderPage(lang) {
     return `<div class="contact-grid" id="contactGrid">${cards}</div>\n  </div>\n</section>`;
   });
   page = page.replace(/<div class="fab" id="fab"><\/div>/, () => {
-    const fab = ['wechat', 'whatsapp', 'mail']
+    const panel = ['wechat', 'whatsapp', 'mail']
       .map((key) => {
         const c = CH[key];
-        const cls = key === 'mail' ? ' class="fab-mail"' : '';
-        return `<a${cls} href="${c.href}" aria-label="${esc(c.label)}"><span class="ico">${c.ico}</span><span class="txt">${esc(c.label)}</span></a>`;
+        return `<a href="${c.href}"><strong>${esc(c.label)}</strong><small>${esc(c.id)}</small></a>`;
       })
       .join('');
-    return `<div class="fab" id="fab">${fab}</div>`;
+    return `<div class="fab" id="fab"><details><summary aria-label="${esc(t.fab.main)}"><span class="ico">💬</span><span class="txt">${esc(t.fab.main)}</span></summary><div class="fab-panel">${panel}</div></details></div>`;
   });
 
   return page;

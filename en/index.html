@@ -261,22 +261,34 @@ details .ans{padding:0 0 22px;font-size:14.5px;color:var(--ink-soft);max-width:7
 .contact-card .for{font-size:12.5px;color:var(--ink-soft);margin-top:8px}
 @media(max-width:680px){.contact-grid{grid-template-columns:1fr}}
 
-/* ===== 浮动联系按钮（CLAUDE.md：按语言路由）===== */
+/* ===== 浮动联系按钮 ===== */
 .fab{
   position:fixed;right:18px;bottom:22px;z-index:110;
   display:flex;flex-direction:column;gap:10px;align-items:flex-end;
 }
-.fab a{
+.fab details{position:relative}
+.fab summary{
   display:flex;align-items:center;gap:8px;text-decoration:none;
   background:var(--orange);color:#fff;font-size:14px;font-weight:500;
   padding:11px 18px;border-radius:999px;box-shadow:0 4px 14px rgba(51,41,31,.22);
-  transition:background .2s,transform .15s;
+  transition:background .2s,transform .15s;cursor:pointer;list-style:none;
 }
-.fab a:hover{background:var(--orange-deep);transform:translateY(-1px)}
-.fab a.fab-mail{background:var(--ink)}
-.fab a.fab-mail:hover{background:#1f1812}
+.fab summary::-webkit-details-marker{display:none}
+.fab summary::after{content:''}
+.fab summary:hover{background:var(--orange-deep);transform:translateY(-1px)}
+.fab-panel{
+  position:absolute;right:0;bottom:calc(100% + 10px);width:220px;
+  background:#fff;border:1px solid var(--line);border-radius:8px;
+  box-shadow:0 12px 28px rgba(51,41,31,.18);padding:8px;
+}
+.fab-panel a{
+  display:block;text-decoration:none;border-radius:6px;padding:10px 12px;color:var(--ink);
+}
+.fab-panel a:hover,.fab-panel a:focus-visible{background:var(--paper-deep)}
+.fab-panel strong{display:block;font-size:13.5px;color:var(--ink)}
+.fab-panel small{display:block;font-size:12px;color:var(--ink-soft);margin-top:2px;word-break:break-all}
 .fab .ico{font-size:16px;line-height:1}
-@media(max-width:480px){.fab a span.txt{display:none}.fab a{padding:13px 14px}}
+@media(max-width:480px){.fab summary span.txt{display:none}.fab summary{padding:13px 14px}.fab-panel{right:-4px;width:210px}}
 
 /* ===== 页脚 ===== */
 footer{background:var(--ink);color:#C9BFB2;padding:46px 0;font-size:13px}
@@ -428,7 +440,7 @@ footer a:hover{color:#fff}
 </footer>
 
 <!-- 浮动联系按钮：按当前语言路由渠道 -->
-<div class="fab" id="fab"><a href="#contact" aria-label="WeChat"><span class="ico">💬</span><span class="txt">WeChat</span></a><a href="https://wa.me/817089523968" aria-label="WhatsApp"><span class="ico">💬</span><span class="txt">WhatsApp</span></a><a class="fab-mail" href="mailto:info@nice.okinawa" aria-label="Email"><span class="ico">✉</span><span class="txt">Email</span></a></div>
+<div class="fab" id="fab"><details><summary aria-label="Free consult"><span class="ico">💬</span><span class="txt">Free consult</span></summary><div class="fab-panel"><a href="#contact"><strong>WeChat</strong><small>OkinawaOnline</small></a><a href="https://wa.me/817089523968"><strong>WhatsApp</strong><small>+81 70-8952-3968</small></a><a href="mailto:info@nice.okinawa"><strong>Email</strong><small>info@nice.okinawa</small></a></div></details></div>
 
 <script>
 /* ====== 联系渠道 ====== */
@@ -2429,12 +2441,13 @@ function render(lang){
     const c=CH[key];
     return `<a class="contact-card" href="${c.href}"><div class="ch">${esc(c.label)}</div><div class="id">${esc(c.id)}</div><div class="for">${esc(t.ct_for[key]||'')}</div></a>`;
   }).join('');
-  /* 浮动按钮：固定使用规则里的三种联系方式 */
-  document.getElementById('fab').innerHTML=['wechat','whatsapp','mail'].map(key=>{
-    const c=CH[key];
-    const cls=key==='mail'?' class="fab-mail"':'';
-    return `<a${cls} href="${c.href}" aria-label="${esc(c.label)}"><span class="ico">${c.ico}</span><span class="txt">${esc(c.label)}</span></a>`;
-  }).join('');
+  /* 浮动按钮：一个入口，展开三种联系方式 */
+  document.getElementById('fab').innerHTML=
+    `<details><summary aria-label="${esc(t.fab.main)}"><span class="ico">💬</span><span class="txt">${esc(t.fab.main)}</span></summary>`+
+    `<div class="fab-panel">${['wechat','whatsapp','mail'].map(key=>{
+      const c=CH[key];
+      return `<a href="${c.href}"><strong>${esc(c.label)}</strong><small>${esc(c.id)}</small></a>`;
+    }).join('')}</div></details>`;
   document.getElementById('langSel').value=lang;
   /* SEO：按语言更新 title / description / canonical / URL */
   if(t.meta_t)document.title=t.meta_t;
