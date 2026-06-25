@@ -296,6 +296,17 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:18px}
 footer a{color:#C9BFB2;text-decoration:none}
 footer a:hover{color:#fff}
 .foot-links{display:flex;gap:18px;flex-wrap:wrap}
+.wx-modal{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:rgba(51,41,31,.55);backdrop-filter:blur(4px);padding:24px}
+.wx-modal[hidden]{display:none}
+.wx-box{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:28px 26px;max-width:320px;width:100%;text-align:center;position:relative;box-shadow:0 18px 50px rgba(51,41,31,.25)}
+.wx-close{position:absolute;top:8px;right:14px;background:none;border:none;font-size:26px;line-height:1;color:var(--ink-soft);cursor:pointer}
+.wx-title{font-family:var(--serif);font-weight:600;font-size:18px;color:var(--ink);margin-bottom:16px}
+.wx-qr{width:200px;height:200px;object-fit:contain;border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px}
+.wx-id-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:16px}
+.wx-id{font-size:17px;font-weight:600;letter-spacing:.03em;color:var(--ink)}
+.wx-copy{background:var(--orange);color:#fff;border:none;border-radius:5px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit}
+.wx-copy:hover{background:var(--orange-deep)}
+.wx-hint{font-size:12px;color:var(--ink-soft);margin-top:12px;line-height:1.6}
 </style>
 <style id="nice-screenshot-mark-style">
 .nice-screenshot-mark {
@@ -449,7 +460,7 @@ footer a:hover{color:#fff}
   <div class="wrap">
     <div class="sec-head"><span class="seal seal-s">信</span><h2 data-i18n="ct_t">免費諮詢</h2></div>
     <p class="sec-lede" data-i18n="ct_l">說明你的事項 ＋ 發送文件照片，當天回覆報價。諮詢和報價完全免費。</p>
-    <div class="contact-grid" id="contactGrid"><a class="contact-card" href="#contact"><div class="ch">WeChat</div><div class="id">OkinawaOnline</div><div class="for">中文諮詢首選</div></a><a class="contact-card" href="https://wa.me/817089523968"><div class="ch">WhatsApp</div><div class="id">+81 70-8952-3968</div><div class="for">English / Deutsch</div></a><a class="contact-card" href="mailto:info@nice.okinawa"><div class="ch">Email</div><div class="id">info@nice.okinawa</div><div class="for">文件較多時推薦</div></a></div>
+    <div class="contact-grid" id="contactGrid"><a class="contact-card" href="#wechat"><div class="ch">WeChat</div><div class="id">OkinawaOnline</div><div class="for">中文諮詢首選</div></a><a class="contact-card" href="https://wa.me/817089523968"><div class="ch">WhatsApp</div><div class="id">+81 70-8952-3968</div><div class="for">English / Deutsch</div></a><a class="contact-card" href="mailto:info@nice.okinawa"><div class="ch">Email</div><div class="id">info@nice.okinawa</div><div class="for">文件較多時推薦</div></a></div>
   </div>
 </section>
 
@@ -468,7 +479,21 @@ footer a:hover{color:#fff}
 </footer>
 
 <!-- 浮动联系按钮：按当前语言路由渠道 -->
-<div class="fab" id="fab"><details><summary aria-label="免費諮詢"><span class="ico">💬</span><span class="txt">免費諮詢</span></summary><div class="fab-panel"><a href="#contact"><strong>WeChat</strong><small>OkinawaOnline</small></a><a href="https://wa.me/817089523968"><strong>WhatsApp</strong><small>+81 70-8952-3968</small></a><a href="mailto:info@nice.okinawa"><strong>Email</strong><small>info@nice.okinawa</small></a></div></details></div>
+<div class="fab" id="fab"><details><summary aria-label="免費諮詢"><span class="ico">💬</span><span class="txt">免費諮詢</span></summary><div class="fab-panel"><a href="#wechat"><strong>WeChat</strong><small>OkinawaOnline</small></a><a href="https://wa.me/817089523968"><strong>WhatsApp</strong><small>+81 70-8952-3968</small></a><a href="mailto:info@nice.okinawa"><strong>Email</strong><small>info@nice.okinawa</small></a></div></details></div>
+
+<!-- 微信弹窗 -->
+<div class="wx-modal" id="wxModal" hidden>
+  <div class="wx-box">
+    <button class="wx-close" id="wxClose" aria-label="Close">×</button>
+    <div class="wx-title" id="wxTitle">扫码加微信咨询</div>
+    <img class="wx-qr" id="wxQr" src="/wechat-qr.png" alt="WeChat QR" width="200" height="200">
+    <div class="wx-id-row">
+      <span class="wx-id" id="wxId">OkinawaOnline</span>
+      <button class="wx-copy" id="wxCopy">复制</button>
+    </div>
+    <div class="wx-hint" id="wxHint">微信搜索此号，或截图后用「扫一扫」相册识别</div>
+  </div>
+</div>
 
 <script>
 /* ====== 联系渠道 ====== */
@@ -477,7 +502,7 @@ const CH = {
   "ico": "💬",
   "label": "WeChat",
   "id": "OkinawaOnline",
-  "href": "#contact"
+  "href": "#wechat"
  },
  "line": {
   "ico": "💬",
@@ -2506,8 +2531,46 @@ document.getElementById('langSel').addEventListener('change',e=>{
 });
 document.querySelectorAll('#nl a').forEach(a=>a.addEventListener('click',()=>document.getElementById('nl').classList.remove('open')));
 render(detectLang());
+/* ====== 微信弹窗 ====== */
+(function(){
+  const m=document.getElementById('wxModal');
+  if(!m)return;
+  const isZh=()=>['zh','tw'].includes(document.body.dataset.lang);
+  const T={
+    zh:{t:'扫码加微信咨询',copy:'复制',ok:'已复制',hint:'微信搜索此号，或截图后用「扫一扫」相册识别'},
+    en:{t:'Add us on WeChat',copy:'Copy',ok:'Copied ✓',hint:'Search this ID on WeChat, or scan the QR from your photo album'}
+  };
+  const $=id=>document.getElementById(id);
+  function open(e){
+    if(e)e.preventDefault();
+    const t=isZh()?T.zh:T.en;
+    $('wxTitle').textContent=t.t;$('wxCopy').textContent=t.copy;$('wxHint').textContent=t.hint;
+    m.hidden=false;document.body.style.overflow='hidden';
+  }
+  function close(){m.hidden=true;document.body.style.overflow=''}
+  // 事件委托：任何指向 #wechat 的链接都触发弹窗（含 JS 后渲染的卡片和 FAB）
+  document.addEventListener('click',ev=>{
+    const a=ev.target.closest('a[href="#wechat"]');
+    if(a)open(ev);
+  });
+  $('wxClose').addEventListener('click',close);
+  m.addEventListener('click',ev=>{if(ev.target===m)close()});
+  document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&!m.hidden)close()});
+  $('wxCopy').addEventListener('click',async()=>{
+    const t=isZh()?T.zh:T.en;
+    try{await navigator.clipboard.writeText('OkinawaOnline')}
+    catch(e){
+      const r=document.createRange();r.selectNode($('wxId'));
+      const s=getSelection();s.removeAllRanges();s.addRange(r);
+      try{document.execCommand('copy')}catch(_){}
+      s.removeAllRanges();
+    }
+    $('wxCopy').textContent=t.ok;
+    setTimeout(()=>$('wxCopy').textContent=t.copy,1500);
+  });
+})();
   </script>
 <script src="https://analytics.nice.okinawa/script.js" defer></script>
-<div class="nice-screenshot-mark" aria-label="Page address and version">translation.nice.okinawa/tw/ · v2026.06.14</div>
+<div class="nice-screenshot-mark" aria-label="Page address and version">translation.nice.okinawa/ · v2026.06.14</div>
 </body>
 </html>
