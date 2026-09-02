@@ -1,5 +1,8 @@
-<!--WAN-CONSTITUTION-START version=v1.13-->
-# WAN Constitution v1.13
+<!--WAN-CONSTITUTION-START version=v1.19-->
+# WAN Constitution v1.19
+
+更新日期:2026-09-02
+Changelog:v1.19 新增 I18N-SSOT 与 CONTENT-ISOLATION 两项原则;撤销 JST 05:00–09:00 固定生产发布窗口,改为每次高风险生产发布必须取得绑定 release identity 的 Wan 明示授权,其余 release 安全硬门保持不变。
 
 唯一源头:wan-rules 仓库。各 repo CLAUDE.md 中的宪法区间由脚本同步生成,禁止手改。修改仅限 Wan 本人确认,每次修改版本号 +1 并同步全部 repo。
 设计背景参考:docs/REVIEW_2026-0707_SYSTEM_DESIGN.md;CC 开工前必读 rules/ANTI_PATTERNS.md。该引用为 v1.8 设计背景与执法清单,非新增宪法条文。
@@ -10,6 +13,13 @@
 指令闭环:每条指令以回报要求结尾;每日收工执行一次收尾确认,清空悬空任务。
 出问题必产出:每次故障处理完,必须产出防复发机制,优先级:自动检查(MERGE_GATE / smoke test)> 流程卡点(执行前报 Wan 确认)> 纯文字规则。纯文字规则每季度盘点,一季度未触发即删除或降级。
 宪法修改程序:仅限 Wan 亲自确认;版本号 +1 后立即跑 sync 铺至全部 repo;MERGE_GATE 校验版本号,不匹配拒绝合并。
+
+### 常设授权
+
+1. 各仓 `CLAUDE.md` 落后于宪法当前版本时,CC 在当前车内直接同步升版并随 PR 合并,无需另行授权;以“需授权同步 CLAUDE.md”为由推回验收,视同未交车。
+2. 凡指令中明确写出的验收动作(Sandbox/preview 下单、测试邮件、错误路径注入、登录态回归),即视为已授权;CC 缺的是凭据而非授权时,回报中只写“缺 <key 名>”一句,不写授权请求。
+3. 需 Wan 目检的页面必须外网可打开(Pages preview 公开,或挂审核台 `/tasks/<仓>/`);本地文件路径不算交付。
+
 任务三分类:任务指令首行必须标注 A功能 / B内容 / C包装。A功能按全流程严管;B内容按产题、产词、加词工場规则推进,不得被无关技术流程阻塞;C包装仅允许在限定文件范围内试错。
 Platform First:新增任何能力(Prompt/Schema/Workflow/工具/规则)前必答:产品能力还是平台能力?可做成平台能力的,禁止做成产品专属。平台能力入 shared 层,随 sync.sh 分发;产品层仅允许配置与扩展字段,禁止 fork 平台逻辑。
 Evidence before Abstraction:任何抽象(共享模块/schema/generator/框架)必须来自 ≥2 个真实案例。禁止为预测中的需求做抽象;重复出现之后再抽象。流程升级为自动化/Agent/Generator:手动跑满20次且 SOP 稳定两周无修订。product-template 产品级变量以 {{PRODUCT_XXX}} 占位符登记于 product.config.md;generator 待第3个产品复制完成后立项。
@@ -17,12 +27,61 @@ Needs pool 门禁:新条目必填 reuse/auto/compound 三布尔 + platform|produ
 
 二、红线条款
 
+### 支付与付费客人红线
+
+总红线:任何改动——无论大小、无论哪个仓——不得影响①已付费客人的学习使用、②支付系统收钱、③预授权系统。任一项受影响即 P0。每车发车回报必须显式写明“对三项零影响”,并附证据:付费账号回归、建单/下单探针、授权页铁律四项。
+
+海外客人支付红线:客人支付/授权页不得以只对部分国家开放的嵌入式组件(如 PayPal Advanced Card Fields)作为唯一卡付路径;卡付必须有一条不挑买家国家的通道。支付容器必须 `notranslate`。任何支付组件加载必须有超时兜底文案,不许静默转圈。发车前 CC 必须在日本实际点通页面上每一个支付按钮(改样式也算碰支付)。上线后第一位海外客人走通前由克劳德盯住,出问题当天修。
+
+支付页零回归铁律:凡触碰客人支付/授权页(文案、样式、版式、后台、路由、配置,不论多小)的车,发车前必做四项:①diff 限定在声明的文件,不碰未声明的 Worker 逻辑/路由/配置;②CC 用真实浏览器开生产或 preview 短链截图,PayPal 钮、卡付表单、引导文同屏可见;③无卡 POST 探测支付接口返业务 400(非 404/405),证明路由在;④发布后 10 分钟内复核生产一次。四项缺一不得宣布完成。
+
+### 自动邮件与测试发信附则
+
+1. “CC 不得代理发送邮件/消息”指:CC 不得以 Wan、公司或任何品牌名义,向真实客人、学员、合作方或任何真人发送任何消息(邮件/LINE/WhatsApp/SNS 私信/评论均含)。
+2. 下列情形不在禁令内,属于验收被测系统,CC 应当执行而非推回 Wan:
+   - 系统在 Sandbox / preview / 测试环境触发的自动交易邮件(授权确认、告警、摘要等),收件人为 CC 自己控制的测试邮箱或 Resend 测试域地址;
+   - 发往 info@nice.okinawa 的系统告警/失败通知/测试通知(主题前缀 [TEST]);
+   - 生产环境的定时巡检邮件、备份告警、空队列预警等无真实客人收件人的系统邮件。
+3. 任何情况下,收件人字段出现真实客人地址即属禁令范围;测试时不得借用真实订单的 guest_email。
+4. 生产环境发往真实客人的邮件,只能由客人自身行为触发(如完成预授权),CC 不得手动补发、重发、代发;需要补发的由 Wan 亲自操作或明确逐条授权。
+5. 引用本禁令推回验收前,先对照第 2 条;误用禁令导致验收未完成,视同未交车。
+
+附则:Worker 自有路径必须由单一常量表生成全部域名的路由,并有“每条路径 × 每个域”的测试断言(0821 四次漏路由的教训)。
+
+### I18N-SSOT
+
+简体中文是所有站点“自然语言内容”的唯一母版(single source of truth)。英文、繁中、日文以及未来新增的其他语言,均为中文母版的派生翻译层,不得反向成为内容真源。
+
+I18N-SSOT 针对自然语言内容,包括标题、正文、产品说明、UI 文案、提示、FAQ、教学解释、gloss / usage / instruction / feedback、SEO 文案及其他用户可读语言内容。
+
+以下 language-neutral canonical facts 不属于“中文翻译母版”:stable ID、course / lesson / step / item ID、price 数值、日期/时间事实、answer identity、audio/video reference、entitlement identifier、progress identity、API contract 及其他结构化业务事实。
+
+正确技术分层目标为:①canonical facts(与语言无关的事实、身份、结构);②zh original(简体中文自然语言母版);③locale overlays(en / zh-Hant / ja / future locales);④UI dictionaries(各语言界面文案层)。
+
+自然语言内容变更必须遵循:中文母版修改 → 其他语言标记 NEEDS_SYNC → 从中文母版更新派生语言 → 检查漏翻 / 旧译文 / stale translation / key mismatch → 测试 → 发布。
+
+禁止只改英文而不回写中文母版;禁止让英文/日文等长期成为事实上的维护真源;禁止多语言页面分别手工演进且无同步检测;禁止因翻译方便复制另一套业务事实。现有历史系统暂未达到此架构者登记迁移债务,不得要求一次性全站重构,但所有新功能与新内容应向该目标收敛。KISO canonical + 中文 original + locale overlay 可作为首个实施样板,但本规则不依赖该实验是否完成。
+
+### CONTENT-ISOLATION
+
+文案、翻译、i18n 与展示层变化不得改变核心业务语义。内容层故障不得等价于业务层故障。
+
+内容/i18n 改动不得改变以下受保护业务域:支付逻辑、支付按钮启用条件、create-order 条件、登录、OTP、authentication、entitlement、membership state、refund / dispute state、progress identity、学习记录及其他核心业务状态机。
+
+文案、语言组件或 translation overlay 出现 translation key 缺失、locale 文件缺失、i18n helper 未初始化、翻译加载异常或 unsupported locale 时,允许的后果最多是 controlled fallback、明确受控错误状态、使用中文母版或既定 fallback locale。
+
+不得因此绕过付款前置条件、禁掉本来可用的支付功能、改变 entitlement、改变登录状态、清空 progress、让购买/学习主链 JS 整体中断,或 fail-open 暴露受保护内容。
+
+安全相关展示层故障仍必须遵守既有 fail-closed 契约;CONTENT-ISOLATION 不得被解释成“安全检查失败也继续放行”。其核心含义是内容层与业务层结构解耦,而不是降低安全门。
+
 付费状态机:任何产生费用的操作必须且只能处于以下三态之一:①禁止:无有效授权,不得执行;②单次授权:Wan 明确授权一个具体付费动作,授权仅对该次动作有效,动作完成、取消或条件变化后立即回到禁止态;③额度预授权:Wan 明确指定服务、用途、额度上限和有效期,仅可在全部边界内执行,额度耗尽、到期或条件变化后立即回到禁止态。ElevenLabs 不超过 5000 credits 的授权归入额度预授权态。状态不明确时按禁止态处理。发信、联络客人不进入本状态机,一律禁止由 agent 执行。
 部署五步:分支 → 预览 → Wan 隐身验收 → merge → tag。永不直碰 main。生产 Worker 部署只能走 GitHub Actions,触发条件为已进入 main 的 annotated production tag,且 tag annotation 必须含 Wan-Verified: yes;本地 wrangler 只允许 preview 环境,禁止本地生产 wrangler deploy。
+生产发布授权纪律:安全、支付、权益及其他高风险生产变更,生产发布前必须取得 Wan 对“该次具体发布”的明示授权;授权不限固定时段。授权至少应绑定 repository / system,以及 candidate SHA / main SHA / release tag / release identifier 中的足够信息,使其能够明确识别“Wan 授权的是哪一次发布”。若候选代码发生实质漂移(例如 main 前进、candidate SHA 改变、release 内容扩大、出现新的高风险 diff),不得自动沿用旧授权,必须重新核验授权范围。纯粹因 workflow retry 或同一 immutable candidate 的恢复操作是否可沿用原授权,按既有 release contract 判定并留证。发布回报必须记录 Wan 明示授权存在、授权对应的 release identity、实际部署 identity;相关仓库如使用 PROGRESS.md / release records,按现有机制同步留痕。取消固定发布时段绝不得解释为允许无授权发布或降低发布安全要求;required checks、Wan-Verified release provenance、annotated/immutable tag 契约、credential preflight、Atomic Release、production deploy gate、paid smoke、rollback anchor、fail-closed、release provenance 及其他现有安全硬门全部保持不变。触及鉴权、资源签名、CSP、限流或同类安全面的生产发布,发前仍必须留存 cctest 按追加验收清单全绿截图;发后 2 小时内每 30 分钟由 cctest 走 Part1 10 题并留证。任何学员路径(音频、图片、登录、购买)异常,先 revert/回退到上一稳定发布,再查根因,不得带病排查。一次安全发布只允许一种安全类别,禁止鉴权、签名、CSP、限流混合发车。
 域名/API入口切换三同步:任何域名、API 入口、Worker 路由或前端入口切换,必须同时完成 DNS 解析验证通过、前端引用全量替换并经 site-config 收口、wrangler.toml 路由固化;三者未齐禁止合并 main。
 冻结区改动红线:触碰 FREEZE.md 定义的冻结区即为高风险任务,必须单独任务、单独分支;指令必须列明允许修改的文件清单,清单外禁止改动。
 密钥零明文:密钥只进 wrangler secret / 环境变量,禁止出现在代码、配置文件、仓库、聊天记录明文中。
-生产数据只读:生产 KV / D1 / R2 只读;写入仅限 cctest 范围(fixture:cctest@nice.okinawa,OTP 135790,entitlement source "cctest",排除于营收统计)。
+生产数据默认只读:生产 KV / D1 / R2 默认只读;写入仅限 cctest 范围(fixture:cctest@nice.okinawa,OTP 135790,entitlement source "cctest",排除于营收统计)。
+声明式生产 KV 导入通道:经 Wan 逐次明确授权的内容导入,必须将数据包、导入脚本、源 sha256、旧包备份路径一并入仓 PR;导入动作只能由已进入 main 的 Wan-Verified annotated tag 触发的 GitHub Actions job 执行,禁止本地或账外 kv put;必须先完成 preview 验证再执行 production;每次导入的 PR body 与 records 均须留痕。该通道只允许声明的 KV 内容导入,不改变 D1/R2 默认只读与 cctest 约束。
 证据归档窄豁免:经 Wan 逐次明确授权的证据归档工作流,可对生产 R2 执行一次性、纯加法写入,且仅限授权中指名的固定新对象;前置存在性检查,目标对象已存在即拒绝执行;禁止删除、覆盖、修改任何既有对象;每次执行必须回报行数与哈希守恒证据。
 手动操作权益留痕:任何开通、延期、调整、补偿、撤销权益的手动操作,必须走脚本写入 entitlement_log;禁止只改 KV 或后台状态而不留痕。
 测试邮件红线:禁止向真实用户地址发测试邮件;邮件链路测试只允许使用 cctest 范围或 Wan 明确指定的测试地址,不得把真实客户邮箱用于 smoke test / webhook replay / resend retry。
