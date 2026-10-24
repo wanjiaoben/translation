@@ -102,4 +102,52 @@
     <xhtml:link rel="alternate" hreflang="ja" href="https://translation.nice.okinawa/chief-interpreter/ja/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://translation.nice.okinawa/chief-interpreter/"/>
   </url>
+  <url>
+    <loc>https://translation.nice.okinawa/team/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://translation.nice.okinawa/team/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://translation.nice.okinawa/team/zh/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://translation.nice.okinawa/team/ja/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://translation.nice.okinawa/team/"/>
+  </url>
+  <url>
+    <loc>https://translation.nice.okinawa/team/zh/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://translation.nice.okinawa/team/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://translation.nice.okinawa/team/zh/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://translation.nice.okinawa/team/ja/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://translation.nice.okinawa/team/"/>
+  </url>
+  <url>
+    <loc>https://translation.nice.okinawa/team/ja/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://translation.nice.okinawa/team/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://translation.nice.okinawa/team/zh/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://translation.nice.okinawa/team/ja/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://translation.nice.okinawa/team/"/>
+  </url>
+  <url>
+    <loc>https://translation.nice.okinawa/multilingual-translator/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://translation.nice.okinawa/multilingual-translator/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://translation.nice.okinawa/multilingual-translator/zh/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://translation.nice.okinawa/multilingual-translator/ja/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://translation.nice.okinawa/multilingual-translator/"/>
+  </url>
+  <url>
+    <loc>https://translation.nice.okinawa/multilingual-translator/zh/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://translation.nice.okinawa/multilingual-translator/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://translation.nice.okinawa/multilingual-translator/zh/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://translation.nice.okinawa/multilingual-translator/ja/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://translation.nice.okinawa/multilingual-translator/"/>
+  </url>
+  <url>
+    <loc>https://translation.nice.okinawa/multilingual-translator/ja/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://translation.nice.okinawa/multilingual-translator/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://translation.nice.okinawa/multilingual-translator/zh/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://translation.nice.okinawa/multilingual-translator/ja/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://translation.nice.okinawa/multilingual-translator/"/>
+  </url>
 </urlset>
