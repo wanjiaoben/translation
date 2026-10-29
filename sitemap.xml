@@ -150,4 +150,14 @@
     <xhtml:link rel="alternate" hreflang="ja" href="https://translation.nice.okinawa/multilingual-translator/ja/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://translation.nice.okinawa/multilingual-translator/"/>
   </url>
+  <url>
+    <loc>https://translation.nice.okinawa/ja/employment-documents/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://translation.nice.okinawa/ja/employment-documents/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://translation.nice.okinawa/en/employment-documents/"/>
+  </url>
+  <url>
+    <loc>https://translation.nice.okinawa/en/employment-documents/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://translation.nice.okinawa/ja/employment-documents/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://translation.nice.okinawa/en/employment-documents/"/>
+  </url>
 </urlset>
