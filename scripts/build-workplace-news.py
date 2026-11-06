@@ -9,9 +9,8 @@ assert D['site'] in ['translation','JapanUsedCars'] and origin=='https://'+D['si
 assert set(scope)==set(D['entries'])
 names={'zh-Hans':'简体中文','zh-Hant':'繁體中文','en':'English','ja':'日本語','de':'Deutsch','ko':'한국어','th':'ไทย','ru':'Русский'}
 urls={l:origin+'/'+pre+'news/'+slug+'/' for l,pre in scope.items()}
-base=ROOT/'content/news-sitemap-base.xml'
-if not base.exists():base.write_bytes((ROOT/'sitemap.xml').read_bytes())
-xml=base.read_text();ET.fromstring(xml)
+# Preserve the current complete sitemap, including links added after this draft.
+xml=(ROOT/'sitemap.xml').read_text();ET.fromstring(xml)
 for l,pre in scope.items():
  assert pre in ['','tw/','en/','ja/','de/','ko/','th/','ru/']
  e=D['entries'][l];home=(ROOT/pre/'index.html').read_text();css='\n'.join(re.findall(r'<style(?:\s[^>]*)?>(.*?)</style>',home,re.S))

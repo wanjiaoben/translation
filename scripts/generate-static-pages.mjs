@@ -144,7 +144,11 @@ function renderPage(lang) {
 for (const lang of langs) {
   const dir = path.join(root, lang);
   fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, 'index.html'), renderPage(lang));
+  // Explicit news-only builds preserve reviewed homepages; default native regeneration stays intact.
+  const target = path.join(dir, 'index.html');
+  if (process.argv.includes('--news-only')) {
+    if (!fs.existsSync(target)) throw new Error(`Missing existing homepage: ${target}`);
+  } else fs.writeFileSync(target, renderPage(lang));
 }
 
 const sitemapUrl = (lang) => `  <url>\n    <loc>${urlFor(lang)}</loc>\n${allLangs
@@ -152,7 +156,17 @@ const sitemapUrl = (lang) => `  <url>\n    <loc>${urlFor(lang)}</loc>\n${allLang
   .join('\n')}\n    <xhtml:link rel="alternate" hreflang="x-default" href="${urlFor('zh')}"/>\n  </url>`;
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${allLangs.map(sitemapUrl).join('\n')}\n</urlset>\n`;
-fs.writeFileSync(path.join(root, 'sitemap.xml'), sitemap);
+const sitemapPath = path.join(root, 'sitemap.xml');
+if (fs.existsSync(sitemapPath)) {
+  let existing = fs.readFileSync(sitemapPath, 'utf8');
+  if (!existing.includes('</urlset>')) throw new Error('Invalid existing sitemap');
+  for (const lang of allLangs) {
+    if (!existing.includes(`<loc>${urlFor(lang)}</loc>`)) {
+      existing = existing.replace('</urlset>', `${sitemapUrl(lang)}\n</urlset>`);
+    }
+  }
+  fs.writeFileSync(sitemapPath, existing);
+} else fs.writeFileSync(sitemapPath, sitemap);
 
 console.log(`Generated ${langs.length} localized directories and sitemap.xml`);
 
