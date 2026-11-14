@@ -129,7 +129,7 @@ function renderPage(lang) {
     return `<div class="contact-grid" id="contactGrid">${cards}</div>\n  </div>\n</section>`;
   });
   page = page.replace(/<div class="fab" id="fab"><\/div>/, () => {
-    const panel = ['wechat', 'whatsapp', 'mail']
+    const panel = ['whatsapp', 'mail']
       .map((key) => {
         const c = CH[key];
         return `<a href="${c.href}"><strong>${esc(c.label)}</strong><small>${esc(c.id)}</small></a>`;
@@ -138,6 +138,11 @@ function renderPage(lang) {
     return `<div class="fab" id="fab"><details><summary aria-label="${esc(t.fab.main)}"><span class="ico">💬</span><span class="txt">${esc(t.fab.main)}</span></summary><div class="fab-panel">${panel}</div></details></div>`;
   });
 
+  page = page.replace(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g, (raw, text) => {
+    const data = JSON.parse(text);
+    if (data['@type'] === 'ProfessionalService') data.knowsAbout = [...t.cases.map(c => c.t), ...Array.from({length: 5}, (_, i) => t[`business_${i}_title`])];
+    return `<script type="application/ld+json">${JSON.stringify(data)}</script>`;
+  });
   return page;
 }
 
